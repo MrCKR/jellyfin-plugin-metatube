@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Jellyfin.Plugin.MetaTube.Configuration;
+using Jellyfin.Plugin.MetaTube.Extensions;
+using Jellyfin.Plugin.MetaTube.Providers;
 
 namespace Jellyfin.Plugin.MetaTube.Translation
 {
@@ -11,15 +13,17 @@ namespace Jellyfin.Plugin.MetaTube.Translation
     {
         private static PluginConfiguration Cfg => Plugin.Instance.Configuration;
 
-        public static async Task<string> TranslationAsync(string sourceStr, CancellationToken cancellationToken)
+        public static async Task<string> TranslationAsync(string sourceStr, CancellationToken cancellationToken, MovieProvider logger)
         {
+            logger.Log("开始翻译:" + sourceStr);
             if (string.IsNullOrWhiteSpace(sourceStr))
                 return sourceStr;
 
             string apiUrl = Cfg.GPTTranslationUrl + "/translation";
             string data = $"\"{sourceStr}\"";
             string transStr = sourceStr;
-
+            logger.Log("url:" + apiUrl);
+            logger.Log("data" + data);
             try
             {
                 using (var httpClient = new HttpClient())
@@ -29,6 +33,7 @@ namespace Jellyfin.Plugin.MetaTube.Translation
                     if (res.IsSuccessStatusCode)
                     {
                         transStr = await res.Content.ReadAsStringAsync(cancellationToken);
+                        logger.Log("翻译成功:" + transStr);
                     }
                 }
             }

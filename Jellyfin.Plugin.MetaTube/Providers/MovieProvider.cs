@@ -20,6 +20,11 @@ namespace Jellyfin.Plugin.MetaTube.Providers;
 
 public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieInfo>, IHasOrder
 {
+    public void Log(string msg)
+    {
+        Logger.Info(msg);
+    }
+    
     private const string AvBase = "AVBASE";
     private const string GFriends = "GFriends";
     private const string Rating = "JP-18+";
@@ -75,8 +80,8 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
         if (true)
         {
             //gpt翻译
-            m.Title = await TranslationGPT.TranslationAsync(m.Title, cancellationToken);
-            m.Summary = await TranslationGPT.TranslationAsync(m.Summary, cancellationToken);
+            m.Title = await TranslationGPT.TranslationAsync(m.Title, cancellationToken, this);
+            m.Summary = await TranslationGPT.TranslationAsync(m.Summary, cancellationToken, this);
         }
 
 
