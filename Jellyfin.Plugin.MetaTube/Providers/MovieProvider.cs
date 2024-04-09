@@ -69,8 +69,16 @@ public class MovieProvider : BaseProvider, IRemoteMetadataProvider<Movie, MovieI
             m.Genres = Configuration.GetGenreSubstitutionTable().Substitute(m.Genres).ToArray();
 
         // Translate movie info.
-        if (Configuration.TranslationMode != TranslationMode.Disabled)
-            await TranslateMovieInfo(m, info.MetadataLanguage, cancellationToken);
+        //if (Configuration.TranslationMode != TranslationMode.Disabled)
+        //    await TranslateMovieInfo(m, info.MetadataLanguage, cancellationToken);
+
+        if (true)
+        {
+            //gpt翻译
+            m.Title = await TranslationGPT.TranslationAsync(m.Title, cancellationToken);
+            m.Summary = await TranslationGPT.TranslationAsync(m.Summary, cancellationToken);
+        }
+
 
         // Distinct and clean blank list
         m.Genres = m.Genres?.Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().ToArray() ?? Array.Empty<string>();

@@ -135,6 +135,11 @@ public class PluginConfiguration : BasePluginConfiguration
     public static string DefaultTaglineTemplate => "配信開始日 {date}";
 
 #if __EMBY__
+    [DisplayName("GPT翻译后端地址")]
+#endif
+    public string GPTTranslationUrl { get; set; }
+
+#if __EMBY__
     [DisplayName("Translation mode")]
 #endif
     public TranslationMode TranslationMode { get; set; } = TranslationMode.Disabled;
